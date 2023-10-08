@@ -34,7 +34,7 @@ void main(){
         scanf("%d",&priority[i]);
     }
     printf("the table for SJF is as follows:\n");
-    printf("pn \t bt \t at \t pri");
+    printf("pn \t bt \t pri \t at");
     for (int i = 0; i < n; i++)
     {
         printf("\n");
