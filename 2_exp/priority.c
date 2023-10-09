@@ -33,7 +33,7 @@ void main(){
         printf("\t");
         scanf("%d",&priority[i]);
     }
-    printf("the table for SJF is as follows:\n");
+    printf("the table for priority is as follows:\n");
     printf("pn \t bt \t pri \t at");
     for (int i = 0; i < n; i++)
     {
@@ -114,7 +114,7 @@ for (int i = 0; i <= n; i++)
     printf("%d \t",gt[i]);
 }
 
- printf("\n the table for SJF is as follows:\n");
+ printf("\n the table for priority is as follows:\n");
  printf("pn \t bt \t prio \t at \t wt \t tt \t ct");
     for (int i = 0; i < n; i++)
     {
