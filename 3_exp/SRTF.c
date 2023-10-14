@@ -8,6 +8,7 @@ void main(){
     int process[size];
     int n;
     printf("\tWELCOME TO SRTF CALCULATOR\t \n");
+    printf("\nRonit Satish Mehta 60009230207\n");
     printf("\nEnter the number of process:\n");
     scanf("%d",&n);
     printf("\nEnter the process number:\n");
