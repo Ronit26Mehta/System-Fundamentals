@@ -49,7 +49,12 @@ int main() {
 
 void first_fit(int blocksize[], int file_size[], int process[], int blocks_no, int file_no) {
     int temp1, temp2, temp3, value;
-
+    int temporary[size];
+    for (int  i = 0; i < blocks_no; i++)
+    {
+        temporary[i] = blocksize[i];
+    }
+    
     for (int i = 0; i < file_no; i++) {
         value = file_size[i];
         int j = 0;
@@ -61,7 +66,7 @@ void first_fit(int blocksize[], int file_size[], int process[], int blocks_no, i
                 temp3 = value;
                 fragment[i] = temp1;
                 block_no[i] = process[j];  
-                block_used[i] = value;      
+                block_used[i] = temporary[j];      
                 break;
             }
             j++;

@@ -10,7 +10,7 @@ int fragment[size];
 int block_no[size];
 int block_used[size];
 int temporary[size];
-
+int temporary1[size];
 void best_fit(int blocksize[], int file_size[], int process[], int blocks_no, int file_no);
 
 int main() {
@@ -50,9 +50,11 @@ int main() {
 
 void best_fit(int blocksize[], int file_size[], int process[], int blocks_no, int file_no) {
     int temp1, temp2, temp3, value;
+    int data;
 
     for (int i = 0; i < blocks_no; i++) {
         temporary[i] = blocksize[i];
+        temporary1[i] = blocksize[i];
     }
 
     for (int i = 0; i < file_no; i++) {
@@ -63,6 +65,7 @@ void best_fit(int blocksize[], int file_size[], int process[], int blocks_no, in
             if (temporary[j] >= value) {
                 if (best_fit_index == -1 || temporary[j] < temporary[best_fit_index]) {
                     best_fit_index = j;
+                    data = j;
                 }
             }
         }
@@ -74,7 +77,7 @@ void best_fit(int blocksize[], int file_size[], int process[], int blocks_no, in
             temp3 = value;
             fragment[i] = temp1;
             block_no[i] = process[best_fit_index];
-            block_used[i] = value;
+            block_used[i] = temporary1[data];
         }
     }
 }
