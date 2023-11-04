@@ -11,7 +11,7 @@ int block_no[size];
 int block_used[size];
 int temporary[size];
 int temporary1[size];
-void best_fit(int blocksize[], int file_size[], int process[], int blocks_no, int file_no);
+void worst_fit(int blocksize[], int file_size[], int process[], int blocks_no, int file_no);
 
 int main() {
     int blocks_no, file_no;
@@ -38,7 +38,7 @@ int main() {
         scanf("%d", &file_size[i]);
     }
 
-    best_fit(blocksize, file_size, process, blocks_no, file_no);
+    worst_fit(blocksize, file_size, process, blocks_no, file_no);
     printf("------ the data -------\n");
     printf("File_no\tFile_size\tBlock_no\tBlock_size\tFragment\n");
     for (int i = 0; i < file_no; i++) {
@@ -48,7 +48,7 @@ int main() {
     return 0;
 }
 
-void best_fit(int blocksize[], int file_size[], int process[], int blocks_no, int file_no) {
+void worst_fit(int blocksize[], int file_size[], int process[], int blocks_no, int file_no) {
     int temp1, temp2, temp3, value;
     int worst_fit_index = -1;
     for (int i = 0; i < blocks_no; i++) {
