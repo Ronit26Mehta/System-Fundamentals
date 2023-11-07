@@ -18,7 +18,8 @@ int main() {
 
     printf("\n\tRonit Satish Mehta 60009230207\n");
     printf("\n\t--------WORST FIT CALCULATOR ---------\n");
-    printf("Enter the number of blocks:\n");
+    printf("\nNote: here zero means not allocated\n");
+    printf("\nEnter the number of blocks:\n");
     scanf("%d", &blocks_no);
     printf("Enter the number of files:\n");
     scanf("%d", &file_no);
