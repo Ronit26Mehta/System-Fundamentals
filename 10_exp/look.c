@@ -11,7 +11,7 @@ int temporary[size];
 
 void LOOK(int cylinders[], int temporary[], int cylinder_size, int request, int seektime);
 
-int main() {
+void main() {
     printf("\t-----RONITSATISHMEHTA 60009230207-------\n");
     printf("\t--------LOOK SIMULATION----------------\n");
     printf("\nEnter the size of disk:");
@@ -38,7 +38,7 @@ int main() {
     printf("\nTOTAL movement:%d", totalmoment);
     printf("\nTOTAL seek time:%d\n", total_seek_time);
 
-    return 0;
+  
 }
 
 void LOOK(int cylinders[], int temporary[], int cylinder_size, int request, int seektime) {

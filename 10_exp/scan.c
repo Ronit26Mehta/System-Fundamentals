@@ -11,7 +11,7 @@ int temporary[size];
 
 void SCAN(int cylinders[], int temporary[], int cylinder_size, int request, int seektime);
 
-int main() {
+void main() {
     printf("\t-----RONITSATISHMEHTA 60009230207-------\n");
     printf("\t--------SCAN SIMULATION----------------\n");
     printf("\nEnter the size of disk:");
@@ -38,15 +38,13 @@ int main() {
     printf("\nTOTAL movement:%d", totalmoment);
     printf("\nTOTAL seek time:%d\n", total_seek_time);
 
-    return 0;
+
 }
 
 void SCAN(int cylinders[], int temporary[], int cylinder_size, int request, int seektime) {
     int temp1, temp2, result;
     int head_position = request;
     printf("\nThe iterations:");
-
-    // Sort the temporary array
     for (int i = 0; i <= cylinder_size; i++) {
         for (int j = i + 1; j <= cylinder_size; j++) {
             if (temporary[i] > temporary[j]) {
@@ -56,8 +54,6 @@ void SCAN(int cylinders[], int temporary[], int cylinder_size, int request, int 
             }
         }
     }
-
-    // Find the index of head position
     int index;
     for (index = 0; index <= cylinder_size; index++) {
         if (temporary[index] == head_position) {
@@ -65,7 +61,6 @@ void SCAN(int cylinders[], int temporary[], int cylinder_size, int request, int 
         }
     }
 
-    // Move towards the right
     for (int i = index; i <= cylinder_size; i++) {
         temp1 = temporary[i];
         temp2 = temporary[i + 1];
@@ -74,7 +69,6 @@ void SCAN(int cylinders[], int temporary[], int cylinder_size, int request, int 
         printf("\t|%d - %d|+", temp1, temp2);
     }
 
-    // Move towards the left
     for (int i = index - 1; i >= 0; i--) {
         temp1 = temporary[i];
         temp2 = temporary[i + 1];
