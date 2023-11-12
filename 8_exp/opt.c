@@ -76,7 +76,7 @@ void opt(int refernce_string[], int frame_size, int page_size) {
                 }
                 frames[replace_index] = page;
                 frame_queue[rear++] = replace_index;
-                front = (front + 1) % frame_size; // Update front circularly
+                front = (front + 1) % frame_size; 
                 printf("\nIteration %d (Page Replacement):\n", i + 1);
                 printf("Frames: ");
                 for (int k = 0; k < frame_size; k++) {
