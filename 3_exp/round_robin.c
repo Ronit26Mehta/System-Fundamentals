@@ -41,14 +41,11 @@ void main(){
     calculation( process, burst_time, arrival_time, n,time_quantmn);
     
 }
-void calculation(int process[],int burst_time[],int arrival_time[],int n,int time_quantmn){
+void calculation(int process[], int burst_time[], int arrival_time[], int n, int time_quantmn) {
     int gt[100] = {0};
-    int temp1;
-    int temp2;
     int i = 0;
     int time = 0;
     int remaining_time[100];
-    int temp3;
     int wt[100] = {0};
     int tt[100] = {0};
     int completion_time[100] = {0};
@@ -56,57 +53,54 @@ void calculation(int process[],int burst_time[],int arrival_time[],int n,int tim
     float avg_waiting_time = 0.0;
     int turnaround_time = 0;
     float avg_turnaround_time = 0.0;
-    for (int i = 0; i < n; i++)
-    {
-        remaining_time[i]=burst_time[i];
+
+    for (int i = 0; i < n; i++) {
+        remaining_time[i] = burst_time[i];
     }
-    
-    while (i<n)
-    {
-        for (int k = 0; k < n; k++)
-        {
-           if (remaining_time[i]>0)
-           {
-            if (remaining_time[i]<=time_quantmn)
-            {
-                time += remaining_time[i];
-                remaining_time[i]=0;
-                completion_time[i]= time;
-                i++;
+
+    while (1) {
+        int done = 1;
+
+        for (int k = 0; k < n; k++) {
+            if (remaining_time[k] > 0) {
+                done = 0;
+
+                if (remaining_time[k] <= time_quantmn) {
+                    time += remaining_time[k];
+                    completion_time[k] = time;
+                    remaining_time[k] = 0;
+                } else {
+                    time += time_quantmn;
+                    remaining_time[k] -= time_quantmn;
+                }
             }
-            else{
-                time+=time_quantmn;
-                remaining_time[i]-=time_quantmn;
-                
-            }
-            
-           }
-           
-            
         }
-        
+
+        if (done) break;
     }
-    for (int i = 0; i < n; i++)
-    {
-        tt[i]= completion_time[i] - arrival_time[i];
-        wt[i]=tt[i] - burst_time[i];
+
+    for (int i = 0; i < n; i++) {
+        tt[i] = completion_time[i] - arrival_time[i];
+        wt[i] = tt[i] - burst_time[i];
     }
-    for ( i = 0; i < n; i++)
-    {
-        waiting_time+=wt[i];
-        turnaround_time+=tt[i];
+
+    for (int i = 0; i < n; i++) {
+        waiting_time += wt[i];
+        turnaround_time += tt[i];
     }
-    avg_turnaround_time = (float)turnaround_time/n;
-    avg_waiting_time = (float)waiting_time/n;
+
+    avg_turnaround_time = (float)turnaround_time / n;
+    avg_waiting_time = (float)waiting_time / n;
+
     printf("\n the table for Round Robin is as follows:\n");
     printf("pn \t bt \t at \t wt \t tt \t ct");
-    for (int i = 0; i < n; i++)
-    {
+    
+    for (int i = 0; i < n; i++) {
         printf("\n");
-        printf("%d \t %d \t %d \t %d \t %d \t %d  ",process[i],burst_time[i],arrival_time[i],wt[i],tt[i],completion_time[i]);
+        printf("%d \t %d \t %d \t %d \t %d \t %d  ", process[i], burst_time[i], arrival_time[i], wt[i], tt[i], completion_time[i]);
     }
-    printf("\nthe avg waiting time is:%f",avg_waiting_time);
-    printf("\nthe average turnaround time is:%f",avg_turnaround_time);
 
-
+    printf("\nthe avg waiting time is:%f", avg_waiting_time);
+    printf("\nthe average turnaround time is:%f", avg_turnaround_time);
 }
+
