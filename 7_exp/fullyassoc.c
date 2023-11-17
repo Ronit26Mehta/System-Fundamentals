@@ -31,7 +31,6 @@ void cacheMappingFullyAssociative(int address) {
     int index = -1;
     int tag = address / CACHE_SIZE;
 
-    // Check if the data is already in the cache
     for (int i = 0; i < CACHE_SIZE; i++) {
         if (cache[i].valid && cache[i].tag == tag) {
             printf("Cache Hit!\n");
@@ -44,7 +43,6 @@ void cacheMappingFullyAssociative(int address) {
         }
     }
 
-    // Cache miss, replace a line
     if (index != -1) {
         cache[index].valid = 1;
         cache[index].tag = tag;

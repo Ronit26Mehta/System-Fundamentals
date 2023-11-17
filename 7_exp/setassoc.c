@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define CACHE_SETS 4    // Example number of sets
-#define SET_SIZE 4      // Example set size
-#define WORD_SIZE 4     // Example word size
+#define CACHE_SETS 4    
+#define SET_SIZE 4      
+#define WORD_SIZE 4     
 
 typedef struct {
     int valid;
@@ -36,7 +36,7 @@ void cacheMappingSetAssociative(int address) {
     int set = address % CACHE_SETS;
     int tag = address / CACHE_SETS;
 
-    // Check if the data is already in the cache
+
     for (int j = 0; j < SET_SIZE; j++) {
         if (cache[set][j].valid && cache[set][j].tag == tag) {
             printf("Cache Hit!\n");
@@ -45,7 +45,7 @@ void cacheMappingSetAssociative(int address) {
         }
     }
 
-    // Cache miss, replace a line
+
     for (int j = 0; j < SET_SIZE; j++) {
         if (!cache[set][j].valid) {
             cache[set][j].valid = 1;
@@ -56,7 +56,7 @@ void cacheMappingSetAssociative(int address) {
         }
     }
 
-    // All lines in the set are valid, replace the first line
+   
     cache[set][0].tag = tag;
     printf("Cache Miss! Data loaded into cache.\n");
     displayCache();
