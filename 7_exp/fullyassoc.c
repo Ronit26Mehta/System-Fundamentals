@@ -1,112 +1,173 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define CACHE_SIZE 16
-#define WORD_SIZE 4
+#define CACHE_SIZE 8
+#define BLOCK_SIZE 4
 
 typedef struct {
     int valid;
     int tag;
-    char data[WORD_SIZE];
+    // Add other necessary fields for your cache structure
 } CacheLine;
 
-CacheLine cache[CACHE_SIZE];
+typedef struct {
+    CacheLine lines[CACHE_SIZE];
+    // Add other necessary fields for your cache structure
+} Cache;
+
+Cache myCache;
+
+int hits = 0;
+int accesses = 0;
 
 void initializeCache() {
     for (int i = 0; i < CACHE_SIZE; i++) {
-        cache[i].valid = 0;
-        cache[i].tag = -1;
+        myCache.lines[i].valid = 0;
+        // Initialize other cache fields as needed
     }
 }
 
 void displayCache() {
-    printf("\nCache Content:\n");
-    printf("Index\t| Valid\t| Tag\t| Data\n");
-    for (int i = 0; i < CACHE_SIZE; i++) {
-        printf("%d\t| %d\t| %d\t| %s\n", i, cache[i].valid, cache[i].tag, cache[i].data);
-    }
-}
-
-void cacheMappingFullyAssociative(int address) {
-    int index = -1;
-    int tag = address / CACHE_SIZE;
+    printf("Cache Mapping:\n");
 
     for (int i = 0; i < CACHE_SIZE; i++) {
-        if (cache[i].valid && cache[i].tag == tag) {
-            printf("Cache Hit!\n");
-            displayCache();
-            return;
+        printf("%d: ", i);
+
+        if (myCache.lines[i].valid) {
+            printf("%x: ", myCache.lines[i].tag);
+
+            // Print additional data or modify this part as needed
+            for (int j = 0; j < CACHE_SIZE; j++) {
+                if (j == i) {
+                    printf("Hit%d ", j + 1);
+                } else {
+                    printf("0 ");
+                }
+            }
+        } else {
+            printf("Miss: ");
+            for (int j = 0; j < CACHE_SIZE; j++) {
+                printf("0 ");
+            }
         }
 
-        if (!cache[i].valid) {
-            index = i;
-        }
+        printf("\n");
     }
-
-    if (index != -1) {
-        cache[index].valid = 1;
-        cache[index].tag = tag;
-        printf("Cache Miss! Data loaded into cache.\n");
-        displayCache();
-    } else {
-        printf("Cache is full. Cannot load more data.\n");
-    }
+    printf("\n");
 }
 
-void addToCache(int address, int data) {
-    int index = rand() % CACHE_SIZE;
-    cache[index].valid = 1;
-    cache[index].tag = address / WORD_SIZE;
-    cache[index].data = data;
+int isCacheHit(int tag) {
+    for (int i = 0; i < CACHE_SIZE; i++) {
+        if (myCache.lines[i].valid && myCache.lines[i].tag == tag) {
+            return i; // Cache hit, return index
+        }
+    }
+    return -1; // Cache miss
+}
+
+void processTraceFile(char* fileName) {
+    FILE* file = fopen(fileName, "r");
+    if (!file) {
+        printf("Error opening file %s.\n", fileName);
+        return;
+    }
+
+    int address;
+
+    while (fscanf(file, "%x", &address) != EOF) {
+        accesses++;
+        int result = isCacheHit(address / BLOCK_SIZE);
+
+        if (result != -1) {
+            hits++;
+            printf("Cache Hit! ");
+        } else {
+            printf("Cache Miss! ");
+            // Simulate cache load operation here
+        }
+
+        printf("Address: %x\n", address);
+    }
+
+    fclose(file);
 }
 
 void tagAndWordSizeCalculator() {
     printf("Tag Size: %d bits\n", sizeof(int) * 8 - __builtin_clz(CACHE_SIZE));
-    printf("Word Size: %d bits\n", sizeof(int) * 8 - __builtin_clz(WORD_SIZE));
+    printf("Word Size: %d bits\n", sizeof(int) * 8 - __builtin_clz(BLOCK_SIZE));
+}
+
+void displayMemory(char* fileName) {
+    FILE* file = fopen(fileName, "r");
+    if (!file) {
+        printf("Error opening file %s.\n", fileName);
+        return;
+    }
+
+    printf("\nMemory Content:\n");
+    int value;
+    while (fscanf(file, "%d", &value) != EOF) {
+        // Display memory in a vertical hash table format
+        printf("[%d]\n", value);
+    }
+    printf("\n");
+
+    fclose(file);
+}
+
+void displayHitRatio() {
+    if (accesses > 0) {
+        double hitRate = (double)hits / accesses;
+        printf("Hit Rate: %.2f%%\n", hitRate * 100);
+    } else {
+        printf("No accesses recorded yet.\n");
+    }
 }
 
 int main() {
-    int choice, address, data;
+    int choice;
+    char fileName[100];
 
     initializeCache();
 
     do {
-        printf("\nCache Mapping Menu:\n");
-        printf("1. Display Cache\n");
-        printf("2. Cache Mapping (Fully Associative)\n");
-        printf("3. Add to Cache\n");
-        printf("4. Tag and Word Size Calculator\n");
-        printf("5. Exit\n");
+        printf("Cache Simulator Menu:\n");
+        printf("1. Load Trace File\n");
+        printf("2. Display Cache\n");
+        printf("3. Display Hit Rate\n");
+        printf("4. Display Memory\n");
+        printf("5. Tag and Word Size Calculator\n");
+        printf("6. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
         switch (choice) {
             case 1:
-                displayCache();
+                printf("Enter the trace file name: ");
+                scanf("%s", fileName);
+                processTraceFile(fileName);
                 break;
             case 2:
-                printf("Enter the memory address: ");
-                scanf("%d", &address);
-                cacheMappingFullyAssociative(address);
+                displayCache();
                 break;
             case 3:
-                printf("Enter memory address: ");
-                scanf("%d", &address);
-                printf("Enter data: ");
-                scanf("%d", &data);
-                addToCache(address, data);
+                displayHitRatio();
                 break;
             case 4:
-                tagAndWordSizeCalculator();
+                printf("Enter the memory file name: ");
+                scanf("%s", fileName);
+                displayMemory(fileName);
                 break;
             case 5:
-                printf("Exiting program...\n");
+                tagAndWordSizeCalculator();
+                break;
+            case 6:
+                printf("Exiting program.\n");
                 break;
             default:
-                printf("Invalid choice. Please enter a valid option.\n");
+                printf("Invalid choice. Please try again.\n");
         }
-
-    } while (choice != 5);
+    } while (choice != 6);
 
     return 0;
 }
