@@ -17,9 +17,6 @@ typedef struct {
 
 Cache myCache;
 
-int hits = 0;
-int accesses = 0;
-
 void initializeCache() {
     for (int i = 0; i < CACHE_SIZE; i++) {
         myCache.lines[i].valid = 0;
@@ -28,30 +25,10 @@ void initializeCache() {
 }
 
 void displayCache() {
-    printf("Cache Mapping:\n");
-
+    printf("Cache:\n");
     for (int i = 0; i < CACHE_SIZE; i++) {
-        printf("%d: ", i);
-
-        if (myCache.lines[i].valid) {
-            printf("%x: ", myCache.lines[i].tag);
-
-            // Print additional data or modify this part as needed
-            for (int j = 0; j < CACHE_SIZE; j++) {
-                if (j == i) {
-                    printf("Hit%d ", j + 1);
-                } else {
-                    printf("0 ");
-                }
-            }
-        } else {
-            printf("Miss: ");
-            for (int j = 0; j < CACHE_SIZE; j++) {
-                printf("0 ");
-            }
-        }
-
-        printf("\n");
+        printf("[%d] Valid: %d, Tag: %x\n", i, myCache.lines[i].valid, myCache.lines[i].tag);
+        // Display other cache fields as needed
     }
     printf("\n");
 }
@@ -72,56 +49,9 @@ void processTraceFile(char* fileName) {
         return;
     }
 
-    int address;
-
-    while (fscanf(file, "%x", &address) != EOF) {
-        accesses++;
-        int result = isCacheHit(address / BLOCK_SIZE);
-
-        if (result != -1) {
-            hits++;
-            printf("Cache Hit! ");
-        } else {
-            printf("Cache Miss! ");
-            // Simulate cache load operation here
-        }
-
-        printf("Address: %x\n", address);
-    }
+    // Process trace file here
 
     fclose(file);
-}
-
-void tagAndWordSizeCalculator() {
-    printf("Tag Size: %d bits\n", sizeof(int) * 8 - __builtin_clz(CACHE_SIZE));
-    printf("Word Size: %d bits\n", sizeof(int) * 8 - __builtin_clz(BLOCK_SIZE));
-}
-
-void displayMemory(char* fileName) {
-    FILE* file = fopen(fileName, "r");
-    if (!file) {
-        printf("Error opening file %s.\n", fileName);
-        return;
-    }
-
-    printf("\nMemory Content:\n");
-    int value;
-    while (fscanf(file, "%d", &value) != EOF) {
-        // Display memory in a vertical hash table format
-        printf("[%d]\n", value);
-    }
-    printf("\n");
-
-    fclose(file);
-}
-
-void displayHitRatio() {
-    if (accesses > 0) {
-        double hitRate = (double)hits / accesses;
-        printf("Hit Rate: %.2f%%\n", hitRate * 100);
-    } else {
-        printf("No accesses recorded yet.\n");
-    }
 }
 
 int main() {
@@ -134,10 +64,7 @@ int main() {
         printf("Cache Simulator Menu:\n");
         printf("1. Load Trace File\n");
         printf("2. Display Cache\n");
-        printf("3. Display Hit Rate\n");
-        printf("4. Display Memory\n");
-        printf("5. Tag and Word Size Calculator\n");
-        printf("6. Exit\n");
+        printf("3. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -151,23 +78,12 @@ int main() {
                 displayCache();
                 break;
             case 3:
-                displayHitRatio();
-                break;
-            case 4:
-                printf("Enter the memory file name: ");
-                scanf("%s", fileName);
-                displayMemory(fileName);
-                break;
-            case 5:
-                tagAndWordSizeCalculator();
-                break;
-            case 6:
                 printf("Exiting program.\n");
                 break;
             default:
                 printf("Invalid choice. Please try again.\n");
         }
-    } while (choice != 6);
+    } while (choice != 3);
 
     return 0;
 }
